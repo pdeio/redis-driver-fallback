@@ -38,17 +38,16 @@ return [
     | You have the option to send yourself an email with a default text,
     | whenever the redis server should fall.
     |
-    | It is recomended that you use the event ('redis.unvailable') which is fired
-    | whenever the redis stops working, to send the email through your controller
-    | and using your laravel queues.
-    |
     | In case of problems with the mail service, it is possible to catch the error
     | without interrupting the entire cache request. Set "catch_error" to true, so a
     | log error will be saved in "app/storage/app/redis/mails_error.log" with more
     | details. If you set this option to false, laravel will force to send e-mails
-    | and an error exception will interrupt the request with an error exception.
+    | and an error exception will interrupt the request with an error exception page.
     | It is recommended to leave this option on false, in development mode.
     |
+    | It is recomended that you use the event ('redis.unvailable') which is fired
+    | whenever the redis stops working, to send the email through your controller
+    | and using your laravel queues.
     */
 
     'email_config' => [
