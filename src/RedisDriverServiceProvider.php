@@ -47,10 +47,5 @@ class RedisDriverServiceProvider extends CacheServiceProvider
             __DIR__.'/mail' => resource_path('views/pdeio/redisDriverFallback'),
         ]);
         $this->loadViewsFrom(__DIR__.'/mail', 'RedisDriverFallback');
-
-        $this->app['router']->group(['namespace'=>'Pdeio\RedisDriverFallback\Http\Controllers', 'middleware' => 'web'], function($router){
-            $router->get('clear-cache','CacheController@clearCache');
-        });
-
     }
 }
