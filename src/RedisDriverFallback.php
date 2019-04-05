@@ -30,7 +30,7 @@ class RedisDriverFallback extends CacheManager
                 //get the flag, to clear or not the redis's cache
                 if ($this->flag_exists()) {
                     $this->deleteFlag($this->getFlagPath());
-                    if (config('redis-driver-fallback.sync_mode')) {
+                    if (config('redis-driver-fallback.sync_mode', false)) {
                         //clear the new driver's cache
                         $this->clearCache('redis');
                     }
@@ -44,10 +44,10 @@ class RedisDriverFallback extends CacheManager
                     // fires event
                     event('redis.unavailable', null);
                     // send email alert
-                    if (config('redis-driver-fallback.email_config.send_email') == true) {
+                    if (config('redis-driver-fallback.email_config.send_email',false) == true) {
                         $this->sendEmail();
                     }
-                    if (config('redis-driver-fallback.sync_mode')) {
+                    if (config('redis-driver-fallback.sync_mode',false)) {
                         //clear the new driver's cache
                         $this->clearCache($newDriver);
                     }
@@ -86,7 +86,7 @@ class RedisDriverFallback extends CacheManager
      */
     private function getNewDriver()
     {
-        return config('redis-driver-fallback.fallback_driver');
+        return config('redis-driver-fallback.fallback_driver','file');
     }
 
     /**
@@ -97,11 +97,11 @@ class RedisDriverFallback extends CacheManager
     private function sendEmail()
     {
         try {
-            \Illuminate\Support\Facades\Mail::to(config('redis-driver-fallback.email_config.to'))
+            \Illuminate\Support\Facades\Mail::to(config('redis-driver-fallback.email_config.to', config('mail.username')))
                 ->send(new AlertEmail())
                 ->subject('Redis Cache Driver fails');
         } catch (\Exception $e) {
-            if (config('redis-driver-fallback.email_config.catch_error')) {
+            if (config('redis-driver-fallback.email_config.catch_error', false)) {
                 $error = 'Cannot send an alert email, with the pdeio/redis-driver-fallback package. (' . \Carbon\Carbon::now() . ') \n' . $e;
                 \Storage::put('redis/mails_error.log', $error);
             } else {
