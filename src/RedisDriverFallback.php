@@ -30,7 +30,10 @@ class RedisDriverFallback extends CacheManager
                 //get the flag, to clear or not the redis's cache
                 if ($this->flag_exists()) {
                     $this->deleteFlag($this->getFlagPath());
-                    $this->clearCache('redis');
+                    if (config('redis-driver-fallback.sync_mode')) {
+                        //clear the new driver's cache
+                        $this->clearCache('redis');
+                    }
                 }
                 return $repository;
             } catch (\Exception $e) {
