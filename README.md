@@ -22,7 +22,7 @@ composer require pdeio/redis-driver-fallback
 2) To create the configuration file (config/redis-driver-fallback.php) run:
 
 ```
-php artisan vendor:publish
+php artisan vendor:publish --provider="Pdeio\RedisDriverFallback\RedisDriverServiceProvider"
 ```
 
 ## Configuration
