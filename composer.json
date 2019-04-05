@@ -3,8 +3,7 @@
     "description": "When the redis server stops, a second cache driver starts working. Laravel's cache can be cleared whenever the redis server is returned or the second cache driver is started. In this way, the cache system remains synchronized without the problem of loading the old cache registers.",
     "type": "Laravel",
     "require": {
-        "guzzlehttp/guzzle": "6.*",
-        "pdeio/redis-driver-fallback": "^1.0"
+        "guzzlehttp/guzzle": "6.*"
     },
     "autoload": {
         "psr-4": {
@@ -23,6 +22,5 @@
     "authors": [{
         "name": "Paulo De Iovanna",
         "email": "paulodeiovanna@gmail.com"
-    }],
-    "version": "1.0.0"
+    }]
 }
