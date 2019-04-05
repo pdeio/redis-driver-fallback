@@ -90,6 +90,12 @@ Set the property values in the `config/redis-driver-fallback.php`.
     | and an error exception will interrupt the request with an error exception page.
     | It is recommended to leave this option on false, in development mode.
     |
+    | You can edit the email template, if you want.
+    | In the folder "views/pdeio/redis-driver-fallback-email-template/alert.blade.php".
+    | If you delete this folder, the application does not crash, but cannot be sent
+    | any email from this package. You can use the redis event that is triggered when
+    | the redis server stops.
+    |
     | It is recomended that you use the event ('redis.unvailable') which is fired
     | whenever the redis stops working, to send the email through your controller
     | and using your laravel queues.
