@@ -24,7 +24,7 @@ class RedisDriverFallback extends CacheManager
     protected function resolve($currentDriver)
     {
         // check if the cache driver is redis
-        if ($currentDriver === 'redis') {
+        if (config('fallback_turn_on', true) && $currentDriver === 'redis') {
             try {
                 $repository = parent::resolve($currentDriver);
                 //get the flag, to clear or not the redis's cache
@@ -39,15 +39,15 @@ class RedisDriverFallback extends CacheManager
             } catch (\Exception $e) {
                 //set the new cache driver
                 $newDriver = $this->getNewDriver();
-                if (!$this->flag_exists()){
+                if (!$this->flag_exists()) {
                     $this->putFlag();
                     // fires event
                     event('redis.unavailable', null);
                     // send email alert
-                    if (config('redis-driver-fallback.email_config.send_email',false) == true) {
+                    if (config('redis-driver-fallback.email_config.send_email', false) == true) {
                         $this->sendEmail();
                     }
-                    if (config('redis-driver-fallback.sync_mode',false)) {
+                    if (config('redis-driver-fallback.sync_mode', false)) {
                         //clear the new driver's cache
                         $this->clearCache($newDriver);
                     }
@@ -67,15 +67,20 @@ class RedisDriverFallback extends CacheManager
 
     protected function createRedisDriver(array $config)
     {
-        $config = $this->getConfig('redis');
-        $redis = $this->app['redis'];
-        $connection =  $config['connection'] ?? 'default';
-        $store = new RedisStore($redis, $this->getPrefix($config), $connection);
-        try {
-            $store->getRedis()->ping();
-            return $this->repository($store);
-        } catch (\Exception $e) {
-            throw $e;
+        if (config('fallback_turn_on', true)) {
+
+            $config = $this->getConfig('redis');
+            $redis = $this->app['redis'];
+            $connection =  $config['connection'] ?? 'default';
+            $store = new RedisStore($redis, $this->getPrefix($config), $connection);
+            try {
+                $store->getRedis()->ping();
+                return $this->repository($store);
+            } catch (\Exception $e) {
+                throw $e;
+            }
+        } else {
+            return parent::createRedisDriver($config);
         }
     }
     /**
@@ -86,7 +91,7 @@ class RedisDriverFallback extends CacheManager
      */
     private function getNewDriver()
     {
-        return config('redis-driver-fallback.fallback_driver','file');
+        return config('redis-driver-fallback.fallback_driver', 'file');
     }
 
     /**
