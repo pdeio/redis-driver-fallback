@@ -44,7 +44,7 @@ class RedisDriverServiceProvider extends CacheServiceProvider
     {
         $this->publishes([
             __DIR__.'/config/config.php' => config_path('redis-driver-fallback.php'),
-            __DIR__.'/mail' => resource_path('views/pdeio/redisDriverFallback'),
+            __DIR__.'/mail' => resource_path('views/pdeio/redis-driver-fallback-email-template'),
         ]);
         $this->loadViewsFrom(__DIR__.'/mail', 'RedisDriverFallback');
     }

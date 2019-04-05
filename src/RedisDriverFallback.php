@@ -24,7 +24,7 @@ class RedisDriverFallback extends CacheManager
     protected function resolve($currentDriver)
     {
         // check if the cache driver is redis
-        if (config('fallback_turn_on', true) && $currentDriver === 'redis') {
+        if (config('redis-driver-fallback.fallback_turn_on', true) && $currentDriver === 'redis') {
             try {
                 $repository = parent::resolve($currentDriver);
                 //get the flag, to clear or not the redis's cache
@@ -67,7 +67,7 @@ class RedisDriverFallback extends CacheManager
 
     protected function createRedisDriver(array $config)
     {
-        if (config('fallback_turn_on', true)) {
+        if (config('redis-driver-fallback.fallback_turn_on', true)) {
 
             $config = $this->getConfig('redis');
             $redis = $this->app['redis'];
@@ -108,7 +108,9 @@ class RedisDriverFallback extends CacheManager
         } catch (\Exception $e) {
             if (config('redis-driver-fallback.email_config.catch_error', false)) {
                 $error = 'Cannot send an alert email, with the pdeio/redis-driver-fallback package. (' . \Carbon\Carbon::now() . ') \n' . $e;
-                \Storage::put('redis/mails_error.log', $error);
+                $contents = \Storage::get('redis/mails_error.log');
+                $contents .= $error;
+                \Storage::put('redis/mails_error.log', $contents);
             } else {
                 throw $e;
             }

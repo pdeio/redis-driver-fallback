@@ -35,7 +35,7 @@ Set the property values in the `config/redis-driver-fallback.php`.
     |--------------------------------------------------------------------------
     |
     |
-    | Enable / disable the redis driver fallback.
+    | Enable / disable the redis driver fallback to test if it is working.
     |
     | The Redis driver fallback only works if the selected cache driver is set to redis,
     | otherwise even if this option is set to on, only the default laravel cache manager
